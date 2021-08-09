@@ -1,3 +1,20 @@
 import { createApp } from 'vue'
 
-createApp(App).mount('#app')
+import App from './App'
+import components from '@/components/UI'
+
+// console.log(components);
+
+const app = createApp(App)
+
+// components.forEach(component => {
+//     app.component(component.name, component);
+// });
+
+for (var ckey in components) {
+    var component = components[ckey]
+    app.component(component.name, component);
+}
+
+app.mount('#app')
+
