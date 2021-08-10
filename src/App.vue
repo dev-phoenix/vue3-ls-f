@@ -1,6 +1,11 @@
 <template>
     <div class="app">
         <h1>Posts page</h1>
+        <!-- <input type="text" v-model.trim="modificatorValue"> -->
+        <!-- <input type="text" v-model.number="modificatorValue"> -->
+        <!-- <my-button
+            @click="fetchPosts"
+        >Get posts</my-button> -->
         <my-button
             @click="showDialog"
             style="margin: 15px 0;"
@@ -20,9 +25,11 @@
             />
         </my-dialog>
         <post-list
-         :posts="posts"
-         @remove="removePost"
+            :posts="posts"
+            @remove="removePost"
+            v-if="isPostLoading"
          />
+         <div v-else>Loading ...</div>
         <!-- <post-list v-bind:posts="posts"/> -->
     </div>
 </template>
@@ -30,6 +37,7 @@
 <script>
 import PostForm from './components/PostForm.vue';
 import PostList from './components/PostList.vue';
+import axios from 'axios';
 
 export default {
   components: { PostForm, PostList },
@@ -38,13 +46,15 @@ export default {
             likes: 0,
             dislikes: 0,
             posts: [
-                {id: 1, title: 'javascript', body: 'Описание'},
-                {id: 2, title: 'javascript', body: 'Описание 2'},
-                {id: 3, title: 'javascript', body: 'Описание 3'},
+                // {id: 1, title: 'javascript', body: 'Описание'},
+                // {id: 2, title: 'javascript', body: 'Описание 2'},
+                // {id: 3, title: 'javascript', body: 'Описание 3'},
             ],
             // title: '',
             // body: ''
-            dialogVisible: false
+            dialogVisible: false,
+            modificatorValue: '',
+            isPostLoading: false
         }
     },
     methods: {
@@ -84,7 +94,26 @@ export default {
         },
         showDialog() {
             this.dialogVisible = true;
+        },
+        async fetchPosts() {
+            try {
+                this.isPostLoading = true;
+                // this.isPostLoading = false;
+                // setTimeout( async () => {
+                    const response = await axios.get('http://jsonplaceholder.typicode.com/posts?_limit=10');
+                    console.log(response)
+                    this.posts = response.data
+                //     this.isPostLoading = true;
+                // }, 1000)
+            } catch (e) {
+                alert('error')
+            } finally {
+                this.isPostLoading = false;
+            }
         }
+    },
+    mounted() {
+        this.fetchPosts();
     }
 }
 
