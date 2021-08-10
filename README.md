@@ -1,5 +1,11 @@
 # vue3-ls-f
 
+## vue version
+```
+vue --version # @vue/cli 4.5.13
+```
+
+
 ## Project setup
 ```
 npm install

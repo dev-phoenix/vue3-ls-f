@@ -1,6 +1,10 @@
 <template>
     <div class="app">
-        
+        <h1>Posts page</h1>
+        <my-button
+            @click="showDialog"
+            style="margin: 15px 0;"
+        >Create post</my-button>
         <!-- <div>
             <button v-on:click="addLike">Like</button>
             <button @click ="addDislike">Dislike</button>
@@ -8,11 +12,16 @@
         <div> Кол-во лайков <strong> {{ likes }} </strong> </div>
         <div> Кол-во дизлайков <strong> {{ dislikes }} </strong> </div> -->
 
-        <post-form
-         @create="createPost"
-         />
+        <my-dialog
+            v-model:show="dialogVisible"
+            >
+            <post-form
+                @create="createPost"
+            />
+        </my-dialog>
         <post-list
          :posts="posts"
+         @remove="removePost"
          />
         <!-- <post-list v-bind:posts="posts"/> -->
     </div>
@@ -30,11 +39,12 @@ export default {
             dislikes: 0,
             posts: [
                 {id: 1, title: 'javascript', body: 'Описание'},
-                {id: 1, title: 'javascript', body: 'Описание 2'},
-                {id: 1, title: 'javascript', body: 'Описание 3'},
+                {id: 2, title: 'javascript', body: 'Описание 2'},
+                {id: 3, title: 'javascript', body: 'Описание 3'},
             ],
             // title: '',
             // body: ''
+            dialogVisible: false
         }
     },
     methods: {
@@ -49,6 +59,7 @@ export default {
             // console.log(p2);
             // console.log(p3);
             this.posts.push(post);
+            this.dialogVisible = false;
 
 
         //     const newPost = {
@@ -67,6 +78,13 @@ export default {
         // inputBody(event) {
         //     this.body = event.target.value
         // }
+        removePost(post) {
+            console.log(post)
+            this.posts = this.posts.filter(p => p.id !== post.id)
+        },
+        showDialog() {
+            this.dialogVisible = true;
+        }
     }
 }
 

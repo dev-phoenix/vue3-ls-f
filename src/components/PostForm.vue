@@ -1,33 +1,35 @@
 <template>
         <form @submit.prevent>
             <h4>Create post</h4>
-            <input
+            <my-input
                 v-model="post.title"
-                class="input"
                 type="text"
                 placeholder="Title"
-                >
+                />
                 <!-- v-bind:value="post.title"
                 @input="post.title = $event.target.value" -->
-            <input
+            <my-input
                 v-model="post.body"
-                class="input"
                 type="text"
                 placeholder="Description"
-             >
+             />
                 <!-- v-bind:value="post.body"
                 @input="post.body = $event.target.value" -->
                 <!-- @input="inputBody" -->
-            <button
-                class="btn"
+                
+            <my-button
+                class="as-fe"
                 @click="createPost"
-            >Create</button>
+            >Create</my-button>
         </form>
 </template>
 <script>
 // import { defineComponent } from '@vue/composition-api'
 
 export default {
+  components: {
+    //    MyButton 
+       },
     data() {
         return {
             post: {
@@ -43,7 +45,7 @@ export default {
             //     title: this.title,
             //     body: this.body
             // }
-            this.id = Date.now();
+            this.post.id = Date.now();
             this.$emit('create',this.post,'vvvvvvvv22222222','vvvvvvvv33333333');
             this.post = {
                 title: '',
@@ -61,19 +63,5 @@ export default {
 form {
     display: flex;
     flex-direction: column;
-}
-.input {
-    width: 100%;
-    border: 1px solid teal;
-    padding: 10px 15px;
-    margin-top: 15px;
-}
-.btn {
-    margin-top: 15px;
-    align-self: flex-end;
-    padding: 10px 15px;
-    background: none;
-    color: teal;
-    border: 1px solid teal;
 }
 </style>

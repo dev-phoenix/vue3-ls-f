@@ -1,12 +1,22 @@
 <template>
-    <div>
+    <div
+        v-if="posts.length > 0"
+     >
         <h3>Post list</h3>
         <post-item
             v-for="post in posts"
-            :key="post.id"
             :post="post"
+            :key="post.id"
+            @remove="$emit('remove',post)"
             />
     </div>
+    <h2
+        v-else
+        style="color: red">
+        List empty
+    </h2>
+        <!-- v-show="posts.length > 0"
+        v-show="posts.length === 0" -->
 </template>
 <script>
 import PostItem from "@/components/PostItem";
@@ -24,9 +34,4 @@ export default {
 </script>
 
 <style scoped>
-.post {
-    padding: 15px;
-    border: 2px solid teal;
-    margin-top: 15px;
-}
 </style>
