@@ -55,6 +55,14 @@ export default {
             // this.title = '';
             // this.body = '';
         },
+    },
+    watch: {
+        post: {
+            handler(v) {
+                console.log(v)
+            },
+            deep: true
+        }
     }
 }
 </script>

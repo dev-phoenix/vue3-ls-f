@@ -1,15 +1,20 @@
 <template>
     <div class="app">
         <h1>Posts page</h1>
+        <div class="app__btns">
+            <!-- <my-button
+                @click="fetchPosts"
+            >Get posts</my-button> -->
+            <my-button
+                @click="showDialog"
+            >Create post</my-button>
+            <my-select
+                v-model="selectedSort"
+                :options="sortOptions"
+            />
+        </div>
         <!-- <input type="text" v-model.trim="modificatorValue"> -->
         <!-- <input type="text" v-model.number="modificatorValue"> -->
-        <!-- <my-button
-            @click="fetchPosts"
-        >Get posts</my-button> -->
-        <my-button
-            @click="showDialog"
-            style="margin: 15px 0;"
-        >Create post</my-button>
         <!-- <div>
             <button v-on:click="addLike">Like</button>
             <button @click ="addDislike">Dislike</button>
@@ -25,10 +30,11 @@
             />
         </my-dialog>
         <post-list
-            :posts="posts"
+            :posts="sortedPosts"
             @remove="removePost"
-            v-if="isPostLoading"
+            v-if="!isPostLoading"
          />
+            <!-- :posts="posts" -->
          <div v-else>Loading ...</div>
         <!-- <post-list v-bind:posts="posts"/> -->
     </div>
@@ -54,7 +60,13 @@ export default {
             // body: ''
             dialogVisible: false,
             modificatorValue: '',
-            isPostLoading: false
+            isPostLoading: false,
+            selectedSort: '',
+            sortOptions: [
+                {value: 'title', name: 'By title'},
+                {value: 'body', name: 'By desctiption'},
+                {value: 'id', name: 'By id'},
+            ]
         }
     },
     methods: {
@@ -103,17 +115,42 @@ export default {
                     const response = await axios.get('http://jsonplaceholder.typicode.com/posts?_limit=10');
                     console.log(response)
                     this.posts = response.data
-                //     this.isPostLoading = true;
+                    // this.isPostLoading = true;
                 // }, 1000)
             } catch (e) {
                 alert('error')
             } finally {
+                // alert('finally')
                 this.isPostLoading = false;
             }
         }
     },
     mounted() {
         this.fetchPosts();
+    },
+    computed: {
+        sortedPosts() {
+            return [...this.posts].sort((post1,post2) => {
+                if(this.selectedSort === 'id')
+                    return post1['id'] - post2['id'];
+                else
+                    return post1[this.selectedSort]?.localeCompare(post2[this.selectedSort])
+            })
+        }
+    },
+    watch: {
+        // selectedSort(newValue) {
+        //     // console.log(newValue)
+        //     this.posts.sort((post1,post2) => {
+        //         if(newValue === 'id')
+        //             return post1['id'] - post2['id'];
+        //         else
+        //             return post1[newValue]?.localeCompare(post2[newValue])
+        //     })
+        // },
+        dialogVisible(newValue) {
+            console.log(newValue);
+        }
     }
 }
 
@@ -133,5 +170,10 @@ export default {
 }
 .app {
     padding: 20px;
+}
+.app__btns {
+    margin: 15px 0;
+    display: flex;
+    justify-content: space-between;
 }
 </style>
