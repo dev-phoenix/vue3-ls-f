@@ -40,8 +40,9 @@
         />
             <!-- :posts="posts" -->
         <div v-else>Loading ...</div>
+        <div ref="observer" class="observer"></div>
         <!-- <post-list v-bind:posts="posts"/> -->
-        <div class="page__wrapper">
+        <!-- <div class="page__wrapper">
             <div
              v-for="pageNumber in totalPages"
              :key="pageNumber"
@@ -51,7 +52,7 @@
                 }"
             @click="changePage(pageNumber)"
             >{{ pageNumber }}</div>
-        </div>
+        </div> -->
             
     </div>
 </template>
@@ -152,13 +153,56 @@ export default {
                 this.isPostLoading = false;
             }
         },
-        changePage(pageNumber) {
-            this.page = pageNumber;
+        // changePage(pageNumber) {
+        //     this.page = pageNumber;
             
-        }
+        // },
+        async loadMorePosts() {
+            try {
+                this.page +=1; 
+                // this.isPostLoading = true;
+                // this.isPostLoading = false;
+                // setTimeout( async () => {
+                    const response = await axios.get('http://jsonplaceholder.typicode.com/posts',{
+                            params: {
+                                _page: this.page,
+                                _limit: this.limit
+                            }
+                        }
+                    );
+                    // console.log(response)
+                    this.totalPages = Math.ceil(response.headers['x-total-count']/this.limit)
+                    this.posts = [...this.posts, ...response.data];
+                    // this.isPostLoading = true;
+                // }, 1000)
+            } catch (e) {
+                alert('error')
+                    console.log(e)
+            } finally {
+                // alert('finally')
+                // this.isPostLoading = false;
+            }
+        },
     },
     mounted() {
         this.fetchPosts();
+        console.log(this.$refs.observer);
+        const options = {
+            // root: document.querySelector('#scrollArea'),
+            rootMargin: '0px',
+            threshold: 1.0
+        }
+        const callback = (entries, observer) => {
+            /* Content excerpted, show below */
+            // console.log(entries)
+            // console.log(entries[0].isIntersecting, entries[0].isVisible)
+            if(entries[0].isIntersecting && this.page < this.totalPages ) {
+                console.log('across')
+                this.loadMorePosts();
+            }
+        };
+        const observer = new IntersectionObserver(callback, options);
+        observer.observe(this.$refs.observer);
     },
     computed: {
         sortedPosts() {
@@ -187,9 +231,9 @@ export default {
         dialogVisible(newValue) {
             console.log(newValue);
         },
-        page() {
-            this.fetchPosts();
-        }
+        // page() {
+        //     this.fetchPosts();
+        // }
     }
 }
 
@@ -229,5 +273,8 @@ export default {
     color: white;
     font-weight: 700;
 }
-
+.observer {
+    height: 30px;
+    background: teal;
+}
 </style>
