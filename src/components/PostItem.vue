@@ -1,11 +1,15 @@
 <template>
     <div class="post" >
         <div class="" >
-            <div><strong>ID:</strong>{{ post.id }}</div>
+
+            <div><strong>ID:</strong>{{ post.id }} likes: {{ $store.state.likes }}</div>
             <div><strong>Title:</strong>{{ post.title }}</div>
             <div><strong>Description:</strong>{{ post.body }}</div>
         </div>
         <div class="post__btns" >
+            <my-button
+            @click="$router.push(`/post/${post.id}`)"
+            >Open</my-button>
             <my-button
             @click="$emit('remove',post)"
             >Delete</my-button>
@@ -43,4 +47,7 @@ export default {
     border: 2px solid teal;
     margin-top: 15px;
 } */
+.post__btns {
+    display: flex;
+}
 </style>
